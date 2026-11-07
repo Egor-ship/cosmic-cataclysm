@@ -4,4 +4,7 @@ vendor/horizon-mod-sdk contains the Horizon SDK from Stink-O/horizon,
 commit 50583ab5f816f21580a6102b7b1365a3667bb15a, under its included MIT license.
 Horizon post-pass prelude copied from the Orbital Laser example (Stink-O, MIT).
 Architecture reference: https://github.com/Stink-O/orbital-laser (MIT).
+Native Horizon SDK shim, game integration hooks and renderer adapted from
+Stink-O Orbital Laser native 0.5.10 (orbital.hnmod published with v0.5.11).
+See THIRD_PARTY_LICENSES.md for its full MIT license and original copyright.
 No Minecraft game code, textures or sounds are distributed here.

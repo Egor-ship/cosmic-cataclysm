@@ -1,0 +1,8 @@
+id = "cosmic"
+name = "Cosmic Cataclysm"
+version = "0.1.1"
+description = "Six planetary strikes with cinematic space graphics."
+authors = ["Cosmic Cataclysm"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]

@@ -76,7 +76,7 @@ impl Mod for Cosmic {
         let a:Vec<_>=args.split_whitespace().collect();
         match a.as_slice() {
             ["control"]=>{world::run_commands(&[format!("give @s {CONTROL}")]);},
-            ["menu"]=>self.open(), ["fire"]=>self.fire()?, ["stop"]=>self.stop(),
+            ["menu"]=>self.open(), ["fire"]=>self.fire()?, ["stop"] | ["left-world"]=>self.stop(),
             ["planet",k]=>{self.planet=KEYS.iter().position(|n|n==k).ok_or("mercury | venus | mars | jupiter | saturn | neptune")?;self.save();},
             [kind,v] if ["cinema","terrain","quality"].contains(kind)=>{
                 if *kind=="quality" {self.fast=match *v {"fast"=>true,"full"=>false,_=>return Err("quality fast|full".into())};}

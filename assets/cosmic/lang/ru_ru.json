@@ -1,0 +1,12 @@
+{
+  "item.cosmic.control": "Космический пульт",
+  "item.cosmic.mercury": "Меркурий",
+  "item.cosmic.venus": "Венера",
+  "item.cosmic.mars": "Марс",
+  "item.cosmic.jupiter": "Юпитер",
+  "item.cosmic.saturn": "Сатурн",
+  "item.cosmic.neptune": "Нептун",
+  "subtitles.cosmic.charge": "Планета накапливает энергию",
+  "subtitles.cosmic.launch": "Космический снаряд запущен",
+  "subtitles.cosmic.impact": "Планетарный удар"
+}
