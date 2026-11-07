@@ -1,0 +1,29 @@
+{
+  "charge": {
+    "sounds": [
+      {
+        "name": "cosmic:charge",
+        "attenuation_distance": 512
+      }
+    ],
+    "subtitle": "subtitles.cosmic.charge"
+  },
+  "launch": {
+    "sounds": [
+      {
+        "name": "cosmic:launch",
+        "attenuation_distance": 512
+      }
+    ],
+    "subtitle": "subtitles.cosmic.launch"
+  },
+  "impact": {
+    "sounds": [
+      {
+        "name": "cosmic:impact",
+        "attenuation_distance": 512
+      }
+    ],
+    "subtitle": "subtitles.cosmic.impact"
+  }
+}

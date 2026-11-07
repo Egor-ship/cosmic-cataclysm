@@ -1,0 +1,7 @@
+Cosmic Cataclysm original source, graphics, item textures and synthesized audio: MIT.
+
+vendor/horizon-mod-sdk contains the Horizon SDK from Stink-O/horizon,
+commit 50583ab5f816f21580a6102b7b1365a3667bb15a, under its included MIT license.
+Horizon post-pass prelude copied from the Orbital Laser example (Stink-O, MIT).
+Architecture reference: https://github.com/Stink-O/orbital-laser (MIT).
+No Minecraft game code, textures or sounds are distributed here.

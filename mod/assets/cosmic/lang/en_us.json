@@ -1,0 +1,12 @@
+{
+  "item.cosmic.control": "Cosmic Control",
+  "item.cosmic.mercury": "Mercury",
+  "item.cosmic.venus": "Venus",
+  "item.cosmic.mars": "Mars",
+  "item.cosmic.jupiter": "Jupiter",
+  "item.cosmic.saturn": "Saturn",
+  "item.cosmic.neptune": "Neptune",
+  "subtitles.cosmic.charge": "Planetary core charging",
+  "subtitles.cosmic.launch": "Orbital projectile launched",
+  "subtitles.cosmic.impact": "Planetary impact"
+}

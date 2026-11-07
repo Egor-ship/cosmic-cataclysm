@@ -1,0 +1,8 @@
+[package]
+name = "cosmic-componentize"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+
+[dependencies]
+wit-component = "0.247.0"
