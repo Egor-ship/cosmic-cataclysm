@@ -67,8 +67,10 @@ def main():
     ap.add_argument('--width', type=int, default=768)
     ap.add_argument('--height', type=int, default=432)
     ap.add_argument('--out', type=Path, default=ROOT/'previews')
+    ap.add_argument('--times', default='6,11,18.8', help='Comma separated timeline seconds')
     args=ap.parse_args()
     width,height=args.width,args.height
+    times=[float(s) for s in args.times.split(',')]
     device=get_default_device()
     print(dict(device.adapter.info))
     prelude=(ROOT/'tools/horizon-prelude.wgsl').read_text(encoding='utf-8-sig')
@@ -82,16 +84,19 @@ def main():
     depth=device.create_texture(size=(width,height,1),format='depth32float',usage=usage.RENDER_ATTACHMENT|usage.TEXTURE_BINDING)
     result=device.create_texture(size=(width,height,1),format='rgba8unorm',usage=usage.RENDER_ATTACHMENT|usage.COPY_SRC)
     uniform=device.create_buffer(size=592,usage=wgpu.BufferUsage.UNIFORM|wgpu.BufferUsage.COPY_DST)
-    data=device.create_buffer_with_data(data=bytes(4),usage=wgpu.BufferUsage.STORAGE)
+    data=device.create_buffer_with_data(data=bytes(16),usage=wgpu.BufferUsage.STORAGE)
+    # Synthetic previews contain no captured game blocks. An empty payload draws no invented debris.
+    atlas=device.create_texture(size=(1,1,1),format='rgba8unorm',usage=usage.TEXTURE_BINDING|usage.COPY_DST)
+    device.queue.write_texture({'texture':atlas},bytes([128,110,80,255]),{'bytes_per_row':4,'rows_per_image':1},(1,1,1))
     linear=device.create_sampler(min_filter='linear',mag_filter='linear')
     nearest=device.create_sampler(min_filter='nearest',mag_filter='nearest')
     scene_bind=device.create_bind_group(layout=scene_pipeline.get_bind_group_layout(0),entries=[{'binding':4,'resource':{'buffer':uniform}}])
-    bind=device.create_bind_group(layout=pipeline.get_bind_group_layout(0),entries=[{'binding':0,'resource':scene.create_view()},{'binding':1,'resource':depth.create_view()},{'binding':2,'resource':linear},{'binding':3,'resource':nearest},{'binding':4,'resource':{'buffer':uniform}}])
+    bind=device.create_bind_group(layout=pipeline.get_bind_group_layout(0),entries=[{'binding':0,'resource':scene.create_view()},{'binding':1,'resource':depth.create_view()},{'binding':2,'resource':linear},{'binding':3,'resource':nearest},{'binding':4,'resource':{'buffer':uniform}},{'binding':5,'resource':{'buffer':data}},{'binding':8,'resource':atlas.create_view(dimension='2d-array')},{'binding':9,'resource':nearest}])
     args.out.mkdir(parents=True,exist_ok=True)
-    contact=Image.new('RGB',(width*3,(height+32)*6),'#070c16')
+    contact=Image.new('RGB',(width*len(times),(height+32)*6),'#070c16')
     draw=ImageDraw.Draw(contact)
     for planet,name in enumerate(NAMES):
-        for column,seconds in enumerate([6.0,11.0,18.8]):
+        for column,seconds in enumerate(times):
             device.queue.write_buffer(uniform,0,uniforms(width,height,planet,seconds))
             encoder=device.create_command_encoder()
             attachment={'view':scene.create_view(),'load_op':'clear','store_op':'store','clear_value':(0,0,0,1)}
