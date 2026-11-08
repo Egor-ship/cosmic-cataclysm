@@ -5,7 +5,7 @@ import shutil
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '0.2.0'
+VERSION = '0.3.0'
 
 def main():
     shaders = ROOT / 'mod/shaders'
@@ -26,9 +26,9 @@ def main():
             f.write('\n#[cfg(test)]\nmod native_tests;\n')
     shutil.copy2(ROOT / 'mod/shaders/cosmic.wgsl', engine / 'data/cosmic.wgsl')
     # Content-only manifest: native code is supplied by the mixin engine, not mod.wasm.
-    (ROOT / 'horizon-mod.toml').write_text('''id = "cosmic"
+    (ROOT / 'horizon-mod.toml').write_text(f'''id = "cosmic"
 name = "Cosmic Cataclysm"
-version = "0.2.0"
+version = "{VERSION}"
 description = "Six planetary strikes with cinematic space graphics."
 authors = ["Cosmic Cataclysm"]
 api = "0.2"

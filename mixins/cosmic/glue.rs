@@ -18,7 +18,7 @@ use std::sync::Mutex;
 
 pub(super) const ID: &str = "cosmic";
 const NAME: &str = "Cosmic Cataclysm";
-const VERSION: &str = "0.2.0";
+const VERSION: &str = "0.3.0";
 /// The operator level of the console, which the server half runs a client's world work at (`native_run_command`).
 const CONSOLE_LEVEL: u8 = 4;
 const WORK: &str = "cosmic:work";

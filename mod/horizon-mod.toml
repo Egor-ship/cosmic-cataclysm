@@ -1,6 +1,6 @@
 id = "cosmic"
 name = "Cosmic Cataclysm"
-version = "0.2.0"
+version = "0.3.0"
 description = "Six planets. One Earth. Cinematic planetary strikes with original procedural graphics."
 authors = ["Cosmic Cataclysm"]
 api = "0.2"

@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "cosmic",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "game": "26.3",
   "horizon": "e57b1d34bb0dcf6bf081c19fe6d2e7f69b60cdf4",
   "mixins": "a2af5c0dd4117d51ecd70066ba7a00b4a2c10dab"

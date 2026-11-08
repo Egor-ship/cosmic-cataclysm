@@ -107,7 +107,7 @@ fn loaded_terrain_survey_leads_to_real_air_and_lining_block_edits() {
     let edits:Vec<_>=observed.iter().filter_map(|o|match o{host::Output::Edit{edit}=>Some(edit),_=>None}).collect();
     assert!(!edits.is_empty(),"a real terrain-on strike must emit native block edits");
     assert!(edits.iter().any(|e|e.runs.iter().any(|r|e.palette[r.block as usize]=="minecraft:air"&&r.height>1)),"crater must remove actual world blocks");
-    assert!(edits.iter().any(|e|e.palette.iter().any(|b|b=="minecraft:blue_ice"||b=="minecraft:packed_ice")),"Saturn must leave its distinct material");
+    assert!(edits.iter().any(|e|e.palette.iter().any(|b|b=="minecraft:amethyst_block")),"Saturn must leave its new ivory/amethyst ring material");
     assert!(edits.iter().any(|e|e.runs.iter().any(|r|r.only.is_some()&&r.height==1)),"flying debris must remove guarded samples of actual source blocks");
     host::with(|s|{
         let (words,_)=s.post_data.as_ref().expect("real captured block geometry must be uploaded to the renderer");
@@ -115,6 +115,34 @@ fn loaded_terrain_survey_leads_to_real_air_and_lining_block_edits() {
     });
     assert!(edits.iter().flat_map(|e|&e.runs).all(|r|r.y>=terrain::LOWEST_FLOOR && r.y+r.height as i32-1<=terrain::HIGHEST_BLOCK));
     assert!(!observed.iter().any(|o|matches!(o,host::Output::Commands{commands} if commands.iter().any(|c|c.starts_with("fill ")))),"terrain uses bounded direct edits, not silent failed fill commands");
+}
+
+#[test]
+fn all_six_geological_layers_reach_the_native_block_editor() {
+    use std::collections::BTreeSet;
+    for key in KEYS {
+        let _host=IsolatedHost::new();let mut cosmic=initialize();
+        command(&mut cosmic,&format!("planet {key}"));command(&mut cosmic,"fire");
+        for tick in 0..3 {answer_world();cosmic.tick(tick);}
+        let strike=cosmic.strike.as_ref().unwrap();assert!(strike.ready);
+        let expected:BTreeSet<_>=strike.columns.iter().flat_map(|c|c.solids.iter().map(|&(a,b,id)|
+            (c.x,c.z,a,(b-a+1) as u32,id.to_owned()))).collect();
+        assert!(!expected.is_empty());
+        cosmic.carve();
+        let queued:Vec<_>=cosmic.edits.iter().cloned().collect();
+        let actual:BTreeSet<_>=queued.iter().flat_map(|e|e.runs.iter().map(|r|
+            (r.x,r.z,r.y,r.height,e.palette[r.block as usize].clone()))).collect();
+        assert!(expected.is_subset(&actual),"{key}: geological layers were lost before native edits");
+        let materials:BTreeSet<_>=expected.iter().map(|r|r.4.as_str()).collect();
+        assert!(materials.len()>=6,"{key}: missing material layers");
+        for e in &queued {
+            assert!(e.runs.iter().map(|r|u64::from(r.height)).sum::<u64>()<10_000);
+            for r in &e.runs {
+                assert!(r.height>0 && r.y>=terrain::LOWEST_FLOOR && r.y+i32::try_from(r.height).unwrap()-1<=terrain::HIGHEST_BLOCK);
+                assert!((r.block as usize)<e.palette.len());
+            }
+        }
+    }
 }
 
 #[test]

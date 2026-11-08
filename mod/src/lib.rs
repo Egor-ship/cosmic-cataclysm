@@ -104,12 +104,26 @@ impl Cosmic {
         // Remove exactly the sampled source blocks before showing those same blocks in flight.
         if let Some(edit)=s.removals.take(){world::edit_blocks(&edit)}
         let mut edit=world::BlockEdit::default();let mut cost=0_u32;
-        for c in std::mem::take(&mut s.columns) {
+        let mut columns=std::mem::take(&mut s.columns);
+        let center_x=(s.target[0].floor() as i32).div_euclid(16);
+        let center_z=(s.target[2].floor() as i32).div_euclid(16);
+        // Finish nearby chunks together, avoiding repeated remesh/relight of the entire crater.
+        columns.sort_by_key(|c|{
+            let x=c.x.div_euclid(16);let z=c.z.div_euclid(16);
+            let dx=i64::from(x)-i64::from(center_x);let dz=i64::from(z)-i64::from(center_z);
+            (dx*dx+dz*dz,x,z,c.x,c.z)
+        });
+        for c in columns {
             let lining=palette(&mut edit.palette,c.lining);
             let air=palette(&mut edit.palette,"minecraft:air");
             if c.top>c.floor {let n=(c.top-c.floor) as u32;edit.runs.push(run(c.x,c.z,c.floor+1,n,air));cost+=n;}
             edit.runs.push(run(c.x,c.z,c.floor,1,lining));cost+=1;
             if let Some((y0,y1,b))=c.feature {let b=palette(&mut edit.palette,b);let n=(y1-y0+1).max(0) as u32;if n>0 {edit.runs.push(run(c.x,c.z,y0,n,b));cost+=n;}}
+            // Geological skins and sliced spires are real blocks, including their exposed sides.
+            for (y0,y1,b) in c.solids {
+                let b=palette(&mut edit.palette,b);let n=(y1-y0+1).max(0) as u32;
+                if n>0 {edit.runs.push(run(c.x,c.z,y0,n,b));cost+=n;}
+            }
             if cost>=8000 {self.edits.push_back(std::mem::take(&mut edit));cost=0;}
         }
         if !edit.runs.is_empty(){self.edits.push_back(edit)}
